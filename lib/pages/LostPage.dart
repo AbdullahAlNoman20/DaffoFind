@@ -15,7 +15,7 @@ class _LostPageState extends State<LostPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,73 +31,80 @@ class _LostPageState extends State<LostPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Upload Image", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text("Upload Image",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: () {},
-                  child: const Text("Choose Image"),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: "Your Name"),
-                  validator: (value) => value!.isEmpty ? "Please enter your name" : null,
-                ),
-                TextFormField(
-                  controller: _locationController,
-                  decoration: const InputDecoration(labelText: "Location"),
-                  validator: (value) => value!.isEmpty ? "Please enter location" : null,
-                ),
-                TextFormField(
-                  controller: _dateController,
-                  decoration: const InputDecoration(
-                    labelText: "Date",
-                    suffixIcon: Icon(Icons.calendar_today),
+                  icon: const Icon(Icons.photo_camera),
+                  label: const Text("Choose Image"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (pickedDate != null) {
-                      setState(() {
-                        _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-                      });
-                    }
-                  },
-                ),
-                TextFormField(
-                  controller: _contactController,
-                  decoration: const InputDecoration(labelText: "Contact Info"),
-                  validator: (value) => value!.isEmpty ? "Please enter contact info" : null,
-                ),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: "Description"),
-                  maxLines: 3,
-                  validator: (value) => value!.isEmpty ? "Please enter a description" : null,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                _buildTextField(
+                  controller: _nameController,
+                  label: "Your Name",
+                  icon: Icons.person,
+                ),
+                _buildTextField(
+                  controller: _locationController,
+                  label: "Location",
+                  icon: Icons.location_on,
+                ),
+                _buildDateField(),
+                _buildTextField(
+                  controller: _contactController,
+                  label: "Contact Info",
+                  icon: Icons.phone,
+                ),
+                _buildTextField(
+                  controller: _descriptionController,
+                  label: "Description",
+                  icon: Icons.description,
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Lost Item Reported Successfully!")),
+                        const SnackBar(
+                            content: Text("Lost Item Reported Successfully!")),
                       );
                     }
                   },
-                  child: const Text("Report Lost Item"),
+                  icon: const Icon(Icons.report_problem),
+                  label: const Text("Report Lost Item"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Center(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text("Back to Home"),
+                    icon: const Icon(Icons.home),
+                    label: const Text("Back to Home"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -105,6 +112,53 @@ class _LostPageState extends State<LostPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper Widget for Text Fields
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    int maxLines = 1,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.redAccent),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      maxLines: maxLines,
+      validator: (value) => value!.isEmpty ? "Please enter $label" : null,
+    );
+  }
+
+  // Date Field with Calendar Icon
+  Widget _buildDateField() {
+    return TextFormField(
+      controller: _dateController,
+      decoration: const InputDecoration(
+        labelText: "Date",
+        suffixIcon: Icon(Icons.calendar_today, color: Colors.redAccent),
+        border: OutlineInputBorder(),
+      ),
+      readOnly: true,
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (pickedDate != null) {
+          setState(() {
+            _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+          });
+        }
+      },
     );
   }
 }

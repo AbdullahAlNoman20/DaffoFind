@@ -11,9 +11,9 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text("DaffoFind"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.deepPurple,
       ),
-      body: SingleChildScrollView(  // Fix overflow issue
+      body: SingleChildScrollView(
         child: Column(
           children: [
             // Banner Image
@@ -35,6 +35,8 @@ class Home extends StatelessWidget {
               title: "Lost Wallet",
               location: "📍 Daffodil University",
               date: "📅 10th March 2025",
+              icon: Icons.wallet_giftcard,
+              color: Colors.red,
             ),
 
             const SizedBox(height: 10),
@@ -45,6 +47,8 @@ class Home extends StatelessWidget {
               title: "Found Mobile",
               location: "📍 Library, 2nd Floor",
               date: "📅 15th March 2025",
+              icon: Icons.phone_android,
+              color: Colors.green,
             ),
 
             const SizedBox(height: 20),
@@ -57,7 +61,7 @@ class Home extends StatelessWidget {
                 children: [
                   // Found Post Button
                   Expanded(
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -71,7 +75,8 @@ class Home extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text(
+                      icon: const Icon(Icons.add_location_alt, size: 24),
+                      label: const Text(
                         "Found Post",
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -81,7 +86,7 @@ class Home extends StatelessWidget {
 
                   // Lost Post Button
                   Expanded(
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -95,7 +100,8 @@ class Home extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text(
+                      icon: const Icon(Icons.location_on, size: 24),
+                      label: const Text(
                         "Lost Post",
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -110,61 +116,75 @@ class Home extends StatelessWidget {
     );
   }
 
-  // Card Widget for Items
+  // Card Widget for Items with Hover Effect
   Widget _buildItemCard({
     required String image,
     required String title,
     required String location,
     required String date,
+    required IconData icon,
+    required Color color,
   }) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            // Item Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                image,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
+    return MouseRegion(
+      onEnter: (_) {
+        // Hover effect to increase the elevation when hovered
+        print('Hovering over card');
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              // Item Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  image,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            const SizedBox(width: 15),
+              const SizedBox(width: 15),
 
-            // Details Section
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              // Details Section
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(icon, color: color, size: 24),
+                        const SizedBox(width: 10),
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    location,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    date,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                  ),
-                ],
+                    const SizedBox(height: 5),
+                    Text(
+                      location,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      date,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
