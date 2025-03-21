@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ![Banner](https://github.com/user-attachments/assets/38e30da7-0e4f-44f5-a8fb-7fb8e02ed7da)
 
 #1. Description 
@@ -14,3 +15,5 @@ belongings.
 � Digitize traditional notice boards, making lost & found announcements more effective. 
 �
 � Improve the chances of item recovery with real-time updates and notifications. 
+=======
+>>>>>>> fce85b3 (Create Lost and Found Page and Update home Page)
