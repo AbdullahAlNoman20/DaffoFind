@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -8,6 +9,22 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  String email = "", password = "", name = "";
+  TextEditingController namecontroller = new TextEditingController();
+  TextEditingController passwordcontroller = new TextEditingController();
+  TextEditingController emailcontroller = new TextEditingController();
+
+  final _formkey = GlobalKey<FormState>();
+
+  registration() async {
+    if (password!==null){
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Registerd Succesfully" style: TextStyle(),,)
+      }
+    }
+  }
+
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
@@ -18,7 +35,8 @@ class _RegisterState extends State<Register> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
-          child: Column(
+          child: Form(
+            key: _formkey,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(child: Image.asset("images/Banner.jpg", height: 200.0)),
@@ -38,7 +56,14 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(color: Colors.white54, fontSize: 20.0),
               ),
               const SizedBox(height: 5.0),
-              TextField(
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please Enter Your Name';
+                  }
+                  return null;
+                },
+                controller: namecontroller,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
@@ -59,7 +84,14 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(color: Colors.white54, fontSize: 20.0),
               ),
               const SizedBox(height: 5.0),
-              TextField(
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please Enter Your Email';
+                  }
+                  return null;
+                },
+                controller: emailcontroller,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
@@ -80,7 +112,14 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(color: Colors.white54, fontSize: 20.0),
               ),
               const SizedBox(height: 5.0),
-              TextField(
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please Enter Your Password';
+                  }
+                  return null;
+                },
+                controller: passwordcontroller,
                 obscureText: !_isPasswordVisible,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(

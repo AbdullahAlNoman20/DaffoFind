@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'register.dart'; // Import Register Page
+import 'package:flutter_app_one/pages/Register.dart';
+import 'home.dart'; // Your home page after successful login
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,6 +12,33 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isPasswordVisible = false; // State to toggle password visibility
+  final _auth = FirebaseAuth.instance; // Firebase authentication instance
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = ''; // To display error messages
+
+  // Function to handle login
+  Future<void> _login() async {
+    try {
+      // Attempt to sign in with email and password
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // If successful, navigate to HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
+    } catch (e) {
+      setState(() {
+        // Update error message to display in case of failure
+        _errorMessage = e.toString();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +77,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 5.0),
               TextField(
+                controller: _emailController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
@@ -72,6 +102,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 5.0),
               TextField(
+                controller: _passwordController,
                 obscureText: !_isPasswordVisible, // Toggle visibility
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -114,15 +145,20 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
+              const SizedBox(height: 10.0),
+              // Error Message Display
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
               const SizedBox(height: 30.0),
               // Login Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle login
-                  },
+                  onPressed: _login, // Use the login method when button is pressed
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     shape: RoundedRectangleBorder(
@@ -141,7 +177,7 @@ class _LoginState extends State<Login> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Register()),
+                      MaterialPageRoute(builder: (context) => const Register()),
                     );
                   },
                   child: Text(
