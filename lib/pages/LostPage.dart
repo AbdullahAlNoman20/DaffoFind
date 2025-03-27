@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +16,37 @@ class _LostPageState extends State<LostPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  bool _isLoading = false;
+
+  Future<void> _uploadLostPost() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    Map<String, dynamic> postData = {
+      "name": _nameController.text,
+      "location": _locationController.text,
+      "date": _dateController.text,
+      "contact": _contactController.text,
+      "description": _descriptionController.text,
+      "timestamp": FieldValue.serverTimestamp(),
+    };
+
+    await FirebaseFirestore.instance.collection("lost_posts").add(postData);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Lost Item Reported Successfully!")),
+    );
+
+    _formKey.currentState!.reset();
+    _nameController.clear();
+    _locationController.clear();
+    _dateController.clear();
+    _contactController.clear();
+    _descriptionController.clear();
+
+    setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +63,6 @@ class _LostPageState extends State<LostPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Upload Image",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.photo_camera),
-                  label: const Text("Choose Image"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
                 _buildTextField(
                   controller: _nameController,
                   label: "Your Name",
@@ -71,25 +86,20 @@ class _LostPageState extends State<LostPage> {
                   maxLines: 3,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Lost Item Reported Successfully!")),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.report_problem),
-                  label: const Text("Report Lost Item"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
+                _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton.icon(
+                        onPressed: _uploadLostPost,
+                        icon: const Icon(Icons.report_problem),
+                        label: const Text("Report Lost Item"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton.icon(
@@ -159,6 +169,7 @@ class _LostPageState extends State<LostPage> {
           });
         }
       },
+      validator: (value) => value!.isEmpty ? "Pick a date" : null,
     );
   }
 }
