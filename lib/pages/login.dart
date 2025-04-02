@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
         child: Form(

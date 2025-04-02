@@ -39,6 +39,12 @@ dependencies:
   cloud_firestore: ^5.1.0  # Use this if you want to store data in Firestore
   firebase_database: ^11.3.4 # Use this for Firebase Realtime Database
   intl: ^0.20.2
+  google_maps_flutter: ^2.12.1
+  google_maps_flutter_web: ^0.5.12
+  flutter_inappwebview: ^6.1.5
+  yjy_google_maps_flutter_platform_interface: ^2.4.3
+  url_launcher: ^6.3.1
+  webview_flutter_plus: ^0.4.12
 
 dev_dependencies:
   flutter_test:
