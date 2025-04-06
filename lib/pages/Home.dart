@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+
   final List<Widget> _pages = [
     const HomeContent(),
     const ContactPage(),
@@ -31,35 +32,41 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("DaffoFind"),
         backgroundColor: const Color.fromARGB(255, 255, 132, 0),
+        foregroundColor: Colors.white, // AppBar text/icon color
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color.fromARGB(255, 255, 132, 0),
+        unselectedItemColor: const Color.fromARGB(255, 255, 132, 0).withOpacity(0.5),
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.contacts), label: "Contact"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: "ChatWithAI"),
         ],
-        currentIndex: _selectedIndex,
-        backgroundColor: const Color.fromARGB(255, 255, 132, 0),
-        selectedItemColor: const Color.fromARGB(255, 255, 255, 255),
-        onTap: _onItemTapped,
       ),
     );
   }
 }
 
+
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
+  // Function to delete a post from Firestore
   Future<void> _deletePost(String collection, String docId) async {
     await FirebaseFirestore.instance.collection(collection).doc(docId).delete();
   }
 
+  // Function to update a post in Firestore with a popup dialog
   Future<void> _updatePost(BuildContext context, String collection,
       String docId, Map<String, dynamic> data) async {
     TextEditingController nameController =
@@ -118,6 +125,7 @@ class HomeContent extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          // Banner Image
           Container(
             width: double.infinity,
             height: 180,
@@ -129,6 +137,8 @@ class HomeContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+
+          // Stream for Lost Posts
           StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('lost_posts')
@@ -151,6 +161,8 @@ class HomeContent extends StatelessWidget {
               );
             },
           ),
+
+          // Stream for Found Posts
           StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('find_posts')
@@ -174,11 +186,14 @@ class HomeContent extends StatelessWidget {
             },
           ),
           const SizedBox(height: 20),
+
+          // Buttons for Creating Posts
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Found Post Button
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
@@ -198,12 +213,14 @@ class HomeContent extends StatelessWidget {
                     icon: const Icon(Icons.add_location_alt, size: 24),
                     label: const Text(
                       "Found Post",
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
+
+                // Lost Post Button
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
@@ -223,8 +240,8 @@ class HomeContent extends StatelessWidget {
                     icon: const Icon(Icons.location_on, size: 24),
                     label: const Text(
                       "Lost Post",
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -236,6 +253,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  // Card Widget for displaying a post item
   Widget _buildItemCard({
     required BuildContext context,
     required String docId,
@@ -264,18 +282,20 @@ class HomeContent extends StatelessWidget {
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-                  Text("📍 ${data['location']}",
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                  Text("\uD83D\uDCCD ${data['location']}",
+                      style:
+                          TextStyle(fontSize: 14, color: Colors.grey[700])),
                   const SizedBox(height: 5),
-                  Text("📅 ${data['date']}",
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                  Text("\uD83D\uDCC5 ${data['date']}",
+                      style:
+                          TextStyle(fontSize: 14, color: Colors.grey[700])),
                 ],
               ),
             ),
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed: () => _updatePost(context, collection, docId,
-                  data.data() as Map<String, dynamic>),
+              onPressed: () => _updatePost(
+                  context, collection, docId, data.data() as Map<String, dynamic>),
             ),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
