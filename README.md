@@ -90,12 +90,18 @@
 ## 📷 Screenshot / Demo
 Home Page
 ![App UI Screenshot](/images/Home.jpg)
+---
 Registration Page
 ![App UI Screenshot](/images/Register.jpg)
+---
 Login Page
 ![App UI Screenshot](/images/Login.jpg)
+---
 Contact Page
 ![App UI Screenshot](/images/Contact.jpg)
+---
+Edit post
+![App UI Screenshot](/images/Edit_post.jpg)
 
 ---
 
