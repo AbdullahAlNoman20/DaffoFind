@@ -88,8 +88,14 @@
 ---
 
 ## 📷 Screenshot / Demo
-
-![App UI Screenshot](https://github.com/user-attachments/assets/38e30da7-0e4f-44f5-a8fb-7fb8e02ed7da)
+Home Page
+![App UI Screenshot](/images/Home.jpg)
+Registration Page
+![App UI Screenshot](/images/Register.jpg)
+Login Page
+![App UI Screenshot](/images/Login.jpg)
+Contact Page
+![App UI Screenshot](/images/Contact.jpg)
 
 ---
 
